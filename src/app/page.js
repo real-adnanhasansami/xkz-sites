@@ -138,7 +138,7 @@ export default function Home() {
 
   const handleCopyLink = () => {
     if (!deployedSubdomain) return;
-    navigator.clipboard.writeText(`https://${deployedSubdomain}.xkz.vercel.app`);
+    navigator.clipboard.writeText(`https://xkz.vercel.app/sites/${deployedSubdomain}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
