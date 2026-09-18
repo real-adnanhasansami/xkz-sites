@@ -1,4 +1,3 @@
-import './globals.css';
 
 export const metadata = {
   title: 'Domain Hub | Instantly Deploy Websites',
