@@ -182,14 +182,14 @@ export default function Home() {
                 onClick={handleCopyLink}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm font-semibold flex items-center space-x-2 shrink-0"
               >
-                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                {copied? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 <span>{copied ? 'Copied! ✓' : 'Copy'}</span>
               </button>
             </div>
 
             <div className="flex justify-center gap-4">
               <a
-                href={`https://${deployedSubdomain}.xkz.vercel.app`}
+                href={`https://xkz.vercel.app/sites/${deployedSubdomain}`}
                 target="_blank"
                 rel="noreferrer"
                 className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl flex items-center space-x-2"
