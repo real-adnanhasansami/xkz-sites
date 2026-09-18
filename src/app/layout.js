@@ -1,15 +1,18 @@
+import './globals.css';
 
 export const metadata = {
-  title: 'Domain Hub | Instantly Deploy Websites',
-  description: 'Create and deploy custom sites with wildcards instantly.',
+  title: 'My Next.js Site',
+  description: 'Built with Next.js and Supabase',
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className="dark">
-      <body className="bg-slate-950 text-slate-50 min-h-screen selection:bg-indigo-500/30">
-        {children}
-      </body>
+    <html lang="bn">
+      <body>{children}</body>
     </html>
   );
 }
