@@ -1,40 +1,32 @@
 import { NextResponse } from 'next/server';
 
 export const config = {
-  matcher: [
-    /*
-     * Match all paths except for:
-     * 1. /api routes
-     * 2. /_next (Next.js internals)
-     * 3. /_static (inside /public)
-     * 4. all root files inside /public (e.g. favicon.ico)
-     */
-    '/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)',
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
 
 export function middleware(req) {
-  const url = req.nextUrl.clone();
-  
-  // Get hostname of request (e.g. demo.xkz.vercel.app)
+  const url = req.nextUrl;
   const hostname = req.headers.get('host') || '';
 
-  // Define our root domains to ignore
-  const rootDomains = ['localhost:3000', 'xkz.vercel.app'];
+  // লোকালহোস্ট এবং আপনার মেইন প্রোডাকশন ডোমেইন ট্র্যাক করা
+  const isLocalhost = hostname.includes('localhost');
+  const isMainDomain = hostname === 'xkz.vercel.app' || hostname.startsWith('xkz-sites');
 
-  // If we are on the root domain, do nothing
-  if (rootDomains.includes(hostname)) {
+  // ভিজিটর মেইন ডোমেইনে থাকলে নরমালি হোমপেজ লোড হবে
+  if (isLocalhost && hostname === 'localhost:3000' || isMainDomain) {
     return NextResponse.next();
   }
 
-  // Extract the subdomain (everything before the first dot)
+  // সাবডোমেন আলাদা করা (যেমন: abc.xkz.vercel.app থেকে abc)
   const subdomain = hostname.split('.')[0];
 
-  // If a valid subdomain exists and it's not a root domain, rewrite the URL
-  if (subdomain && !rootDomains.includes(subdomain)) {
-    url.pathname = `/sites/${subdomain}${url.pathname}`;
-    return NextResponse.rewrite(url);
+  // সাবডোমেনটি যদি ভুল করে মেইন নামগুলো হয়, তবে ইগনোর করবে
+  if (subdomain === 'xkz' || subdomain === 'xkz-sites' || subdomain === 'www') {
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  // ইন্টারনালি রুট পরিবর্তন করে ইউজারের নির্দিষ্ট ডাইনামিক সাইটে নিয়ে যাবে
+  return NextResponse.rewrite(
+    new URL(`/sites/${subdomain}${url.pathname}`, req.url)
+  );
 }
