@@ -2,47 +2,42 @@ import { createClient } from '@supabase/supabase-js';
 import { notFound } from 'next/navigation';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export const dynamic = 'force-dynamic';
-
 export async function generateMetadata({ params }) {
-  const { subdomain } = params;
+  const resolvedParams = await params;
+  const subdomain = resolvedParams.subdomain;
 
-  const { data: site } = await supabase
+  const { data } = await supabase
     .from('user_sites')
     .select('site_title')
     .eq('subdomain', subdomain)
     .single();
 
   return {
-    title: site?.site_title || `Site - ${subdomain}`,
+    title: data?.site_title || 'Generated Site',
   };
 }
 
-export default async function SubdomainPage({ params }) {
-  const { subdomain } = params;
+export default async function SitePage({ params }) {
+  const resolvedParams = await params;
+  const subdomain = resolvedParams.subdomain;
 
-  if (!subdomain) {
-    notFound();
-  }
-
-  const { data: site, error } = await supabase
+  const { data, error } = await supabase
     .from('user_sites')
-    .select('html_content, site_title')
+    .select('html_content')
     .eq('subdomain', subdomain)
     .single();
 
-  if (error || !site) {
+  if (error || !data) {
     notFound();
   }
 
   return (
-    <div
-      dangerouslySetInnerHTML={{ __html: site.html_content }}
-      style={{ width: '100%', minHeight: '100vh' }}
+    <div 
+      style={{ width: '100vw', height: '100vh', margin: 0, padding: 0, border: 'none' }}
+      dangerouslySetInnerHTML={{ __html: data.html_content }} 
     />
   );
 }
