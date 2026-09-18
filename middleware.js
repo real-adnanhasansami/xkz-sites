@@ -4,19 +4,18 @@ export function middleware(req) {
   const url = req.nextUrl;
   const hostname = req.headers.get('host') || '';
 
-  // প্রোডাকশনে আপনার মূল ডোমেইন বা প্রজেক্ট নেম হ্যান্ডেল করার জন্য
-  const currentHost = hostname.split('.')[0];
-
-  // যদি মূল ডোমেইন বা লোকালহোস্ট হয় (যেমন: xkz বা localhost)
+  // লোকালহোস্ট বা মূল ভেরসেল প্রজেক্ট ডোমেইন হলে মিডলওয়্যার বাইপাস করবে (হোমপেজ দেখাবে)
   if (
-    currentHost === 'xkz' || 
-    hostname === 'xkz.vercel.app' || 
-    hostname.includes('localhost')
+    hostname.includes('localhost') || 
+    hostname.includes('127.0.0.1') || 
+    hostname === 'xkz.vercel.app' ||
+    hostname.startsWith('xkz-sites') // আপনার মূল প্রজেক্ট ডোমেইনের অংশ
   ) {
     return NextResponse.next();
   }
 
-  // সাবডোমেইন হলে নির্দিষ্ট ফোল্ডারে রিরাইট করবে
+  // অন্যথায় এটিকে ইউজারের সাবডোমেইন ধরে নির্দিষ্ট ফোল্ডারে রিরাইট করবে
+  const currentHost = hostname.split('.')[0];
   return NextResponse.rewrite(new URL(`/sites/${currentHost}${url.pathname}`, req.url));
 }
 
