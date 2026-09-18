@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Ensure you have these mapped in your .env.local file
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Generate random 8-character alphanumeric string
 const generateSubdomain = () => {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -19,18 +17,23 @@ const generateSubdomain = () => {
 
 export async function POST(req) {
   try {
-    const { html_content } = await req.json();
+    const { site_title, html_content } = await req.json();
 
     if (!html_content) {
-      return NextResponse.json({ success: false, error: 'HTML content required' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'HTML content is required' }, { status: 400 });
     }
 
     const subdomain = generateSubdomain();
 
-    // Requires a 'sites' table in Supabase with 'subdomain' and 'html_content' columns
     const { data, error } = await supabase
-      .from('sites')
-      .insert([{ subdomain, html_content }])
+      .from('user_sites')
+      .insert([
+        { 
+          subdomain, 
+          site_title: site_title || 'Untitled Site', 
+          html_content 
+        }
+      ])
       .select()
       .single();
 
