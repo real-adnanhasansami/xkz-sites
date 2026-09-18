@@ -5,11 +5,7 @@ export const metadata = {
   description: 'Built with Next.js and Supabase',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="bn">
       <body>{children}</body>
