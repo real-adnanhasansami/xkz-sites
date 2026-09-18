@@ -138,6 +138,7 @@ export default function Home() {
 
   const handleCopyLink = () => {
     if (!deployedSubdomain) return;
+    // Updated to path-based URL
     navigator.clipboard.writeText(`https://xkz.vercel.app/sites/${deployedSubdomain}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
@@ -176,13 +177,13 @@ export default function Home() {
 
             <div className="max-w-xl mx-auto bg-slate-950 border border-slate-800 p-3 rounded-2xl flex items-center justify-between gap-2 mb-6">
               <span className="text-emerald-400 font-mono text-sm truncate pl-2">
-                https://{deployedSubdomain}.xkz.vercel.app
+                https://xkz.vercel.app/sites/{deployedSubdomain}
               </span>
               <button
                 onClick={handleCopyLink}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm font-semibold flex items-center space-x-2 shrink-0"
               >
-                {copied? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 <span>{copied ? 'Copied! ✓' : 'Copy'}</span>
               </button>
             </div>
@@ -212,7 +213,7 @@ export default function Home() {
           <section className="text-center max-w-3xl mx-auto mb-10">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-4">
               <Zap className="w-3.5 h-3.5 fill-emerald-400" />
-              <span>⚡ 1,240+ Domains Generated Today</span>
+              <span>⚡ 1,240+ Websites Generated Today</span>
             </div>
             <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4">
               Launch Your Website In 2 Seconds. <span className="text-emerald-400">100% Free.</span>
@@ -266,7 +267,7 @@ export default function Home() {
                 className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl shadow-lg flex items-center justify-center space-x-2 transition disabled:opacity-50"
               >
                 {isDeploying ? <Loader2 className="w-5 h-5 animate-spin" /> : <Rocket className="w-5 h-5" />}
-                <span>{isDeploying ? 'Deploying...' : 'Deploy to xkz.vercel.app 🚀'}</span>
+                <span>{isDeploying ? 'Deploying...' : 'Deploy Site Instantly 🚀'}</span>
               </button>
             </div>
 
